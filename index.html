@@ -3,89 +3,71 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Interaktive Weltkarte mit Zeitzonen</title>
-
-<!-- Leaflet CSS -->
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  integrity="sha256-sA+e2xpHNhkZlPQ6pwwdqT6vWWLau7oXVYh9l0y0v4g="
-  crossorigin=""
-/>
-
+<title>Uhrzeiten verschiedener Städte</title>
 <style>
-  html, body {
-    height: 100%;
-    margin: 0;
-  }
-  #map {
-    height: 90vh;
-    width: 100%;
-  }
-  #zeit-info {
+  body {
+    font-family: Arial, sans-serif;
     padding: 1rem;
-    background: #f0f0f0;
-    font-size: 1.25rem;
-    height: 3.5rem;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+    background: #f9f9f9;
+  }
+  h1 {
     text-align: center;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  li {
+    background: #fff;
+    margin: 0.5rem 0;
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    font-size: 1.2rem;
   }
 </style>
 </head>
 <body>
 
-<div id="map"></div>
-<div id="zeit-info">Bitte auf eine Stadt klicken, um die aktuelle Uhrzeit anzuzeigen.</div>
-
-<!-- Leaflet JS -->
-<script
-  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-  integrity="sha256-o9N1j6xr38V8d7xKu9k7v8XGkefQxPlpr4jF6v5pGmM="
-  crossorigin=""
-></script>
+<h1>Aktuelle Uhrzeiten</h1>
+<ul id="zeitListe">
+  <!-- Uhrzeiten erscheinen hier -->
+</ul>
 
 <script>
-  const map = L.map('map').setView([47.1, 9.4], 3);
-
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-    attribution:
-      'Kartenquelle: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(map);
-
   const staedte = [
-    { name: 'Sargans', coords: [47.055, 9.516], zone: 'Europe/Zurich' },
-    { name: 'New York', coords: [40.7128, -74.006], zone: 'America/New_York' },
-    { name: 'London', coords: [51.5074, -0.1278], zone: 'Europe/London' },
-    { name: 'Tokio', coords: [35.6895, 139.6917], zone: 'Asia/Tokyo' },
-    { name: 'Sydney', coords: [-33.8688, 151.2093], zone: 'Australia/Sydney' },
-    { name: 'Dubai', coords: [25.276987, 55.296249], zone: 'Asia/Dubai' },
-    { name: 'Los Angeles', coords: [34.0522, -118.2437], zone: 'America/Los_Angeles' },
-    { name: 'Moskau', coords: [55.7558, 37.6173], zone: 'Europe/Moscow' },
-    { name: 'São Paulo', coords: [-23.5505, -46.6333], zone: 'America/Sao_Paulo' },
-    { name: 'Peking', coords: [39.9042, 116.4074], zone: 'Asia/Shanghai' },
-    { name: 'Delhi', coords: [28.6139, 77.209], zone: 'Asia/Kolkata' },
-    { name: 'Kapstadt', coords: [-33.9249, 18.4241], zone: 'Africa/Johannesburg' },
-    { name: 'Toronto', coords: [43.65107, -79.347015], zone: 'America/Toronto' },
-    { name: 'Mexico City', coords: [19.4326, -99.1332], zone: 'America/Mexico_City' }
+    { name: 'Sargans', zone: 'Europe/Zurich' },
+    { name: 'New York', zone: 'America/New_York' },
+    { name: 'London', zone: 'Europe/London' },
+    { name: 'Tokio', zone: 'Asia/Tokyo' },
+    { name: 'Sydney', zone: 'Australia/Sydney' },
+    { name: 'Dubai', zone: 'Asia/Dubai' }
   ];
 
-  const zeitInfo = document.getElementById('zeit-info');
+  const ul = document.getElementById('zeitListe');
 
-  staedte.forEach(({ name, coords, zone }) => {
-    const marker = L.marker(coords).addTo(map);
-    marker.bindTooltip(name, {permanent: false, direction: 'top'});
-    marker.on('click', () => {
-      const jetzt = new Date();
+  function updateZeiten() {
+    ul.innerHTML = ''; // Liste leeren
+    const jetzt = new Date();
+
+    staedte.forEach(({ name, zone }) => {
       const zeit = jetzt.toLocaleTimeString('de-CH', {
         timeZone: zone,
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit'
       });
-      zeitInfo.textContent = `${name}: ${zeit}`;
+
+      const li = document.createElement('li');
+      li.textContent = `${name}: ${zeit}`;
+      ul.appendChild(li);
     });
-  });
+  }
+
+  updateZeiten();
+  setInterval(updateZeiten, 1000); // jede Sekunde aktualisieren
 </script>
 
 </body>
