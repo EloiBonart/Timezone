@@ -14,15 +14,13 @@
 />
 
 <style>
-  body {
+  html, body {
+    height: 100%;
     margin: 0;
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
   }
   #map {
-    flex: 1 1 auto;
+    height: 90vh;
+    width: 100%;
   }
   #zeit-info {
     padding: 1rem;
@@ -30,6 +28,7 @@
     font-size: 1.25rem;
     height: 3.5rem;
     box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+    text-align: center;
   }
 </style>
 </head>
@@ -46,17 +45,14 @@
 ></script>
 
 <script>
-  // Karte initialisieren, zentriert auf Europa
   const map = L.map('map').setView([47.1, 9.4], 3);
 
-  // OpenStreetMap Layer hinzufügen
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18,
     attribution:
       'Kartenquelle: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
 
-  // Städte mit Koordinaten und Zeitzonen
   const staedte = [
     { name: 'Sargans', coords: [47.055, 9.516], zone: 'Europe/Zurich' },
     { name: 'New York', coords: [40.7128, -74.006], zone: 'America/New_York' },
@@ -74,10 +70,8 @@
     { name: 'Mexico City', coords: [19.4326, -99.1332], zone: 'America/Mexico_City' }
   ];
 
-  // Div für Zeitanzeige
   const zeitInfo = document.getElementById('zeit-info');
 
-  // Marker für jede Stadt erstellen
   staedte.forEach(({ name, coords, zone }) => {
     const marker = L.marker(coords).addTo(map);
     marker.bindTooltip(name, {permanent: false, direction: 'top'});
