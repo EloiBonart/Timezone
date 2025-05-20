@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Uhrzeiten verschiedener Städte</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 1rem;
+    background: #f9f9f9;
+  }
+  h1 {
+    text-align: center;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  li {
+    background: #fff;
+    margin: 0.5rem 0;
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    font-size: 1.2rem;
+  }
+</style>
+</head>
+<body>
+
+<h1>Aktuelle Uhrzeiten</h1>
+<ul id="zeitListe">
+  <!-- Uhrzeiten erscheinen hier -->
+</ul>
+
+<script>
+  const staedte = [
+    { name: 'Sargans', zone: 'Europe/Zurich' },
+    { name: 'New York', zone: 'America/New_York' },
+    { name: 'London', zone: 'Europe/London' },
+    { name: 'Tokio', zone: 'Asia/Tokyo' },
+    { name: 'Sydney', zone: 'Australia/Sydney' },
+    { name: 'Dubai', zone: 'Asia/Dubai' }
+  ];
+
+  const ul = document.getElementById('zeitListe');
+
+  function updateZeiten() {
+    ul.innerHTML = ''; // Liste leeren
+    const jetzt = new Date();
+
+    staedte.forEach(({ name, zone }) => {
+      const zeit = jetzt.toLocaleTimeString('de-CH', {
+        timeZone: zone,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+
+      const li = document.createElement('li');
+      li.textContent = `${name}: ${zeit}`;
+      ul.appendChild(li);
+    });
+  }
+
+  updateZeiten();
+  setInterval(updateZeiten, 1000); // jede Sekunde aktualisieren
+</script>
+
+</body>
+</html>
